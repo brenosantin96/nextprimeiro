@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//configurar os models nesse arquivo.
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  active    Boolean  @default(true)
+  role      Role     @default(USER)
+  photos    Photo[]
+
+  @@map("users") //isso indica que a tabela vai se chamar users. se nao colocar ele coloca o nome do modelo no plural
+}
+
+model Photo {
+  id     Int     @id @default(autoincrement())
+  url    String
+  legend String?
+  userId Int
+
+  //Fazendo relacao, o id faz referencia no field userId 
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("photos")
+}
+
+//enum é como se fosse uma string fixa
+enum Role {
+  USER
+  ADMIN
+}
