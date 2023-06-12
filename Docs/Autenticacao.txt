@@ -1,0 +1,37 @@
+Autenticacao
+
+-Autorizacao: 
+
+
+Trabalha no backend e no frontend
+
+SISTEMA DE LOGIN
+
+Responsabilidades frontend: 
+Criar o formulario para o usuario inserir os dados, ou entao pegar os dados de algum lugar (pegar do fb por ex),
+
+
+Responsabilidades backend:
+Validar os dados, fazer a autorizacao
+
+
+NEXTAUTH:
+biblioteca de autenticacao voltada para o NEXTJS, suportada pela propria VERCEL(empresa que mexe com hospedagem e criou o next)
+qr fazer login com facebook, com github, com google, twitter etc, next auth lhe permite
+
+
+para utilizar nextAuth sao 4 etapas
+
+1 - configurar .env
+2 - configurar o _app.tsx para que toda aplicacao vai estar dentro do nextAuth, toda ela vai ter acesso ao nextAuth
+3 - Criar a rota de autenticacao, vamos criar na pasta de aplicacao
+4 - adicionar os providers, sao tipos de login que conseguimos fazer, por ex login com facebook. jwt etc
+
+
+LOGIN JWT:
+
+NextAuth traz por padrao o jwt
+como funciona:
+vc faz o login como queira,
+uma vez que esta logado, se pega os dados do usuario, se gera um token (hash) com informacoes do usuario
+o Hash é usado
