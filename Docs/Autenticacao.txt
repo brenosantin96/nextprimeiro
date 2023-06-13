@@ -35,3 +35,24 @@ como funciona:
 vc faz o login como queira,
 uma vez que esta logado, se pega os dados do usuario, se gera um token (hash) com informacoes do usuario
 o Hash é usado
+o nextAuth adiciona um token nos cookies
+
+Passo a passo:
+
+1 - Pegar o csrf token, um token de protecao, fazer uma chamada na API: http://localhost:3000/api/auth/csrf
+csrfToken : 88c9233a8161f4237405d75ff60a4fcd637d3e9924adee9223d47d180f398634
+
+2 - Criar outra chamada de API em http://localhost:3000/api/auth/callback/credentials , chamada POST
+nessa chamada, enviar as informacoes: json: true, csrfToken, e os dados do usuario, email e senha, nesse caso estamos utilzizando o provider credentials
+essa chamada ja vai trazer o TOKEN em um cookie que é retornado pela API.
+
+3 - Finalmente realizar a chamada GET a  http://localhost:3000/api/auth/session e desse modo ja lhe vai retornar os dados do usuario
+Estes 3 passos sao o processo da autenticacao em SI, agora so falta proteger as rotas!
+
+COMO FAZER LOGOUT:
+
+1 - gerar o csrf token 
+2-  mandar o csrf token para a chamada de logout http://localhost:3000/api/auth/signout
+enviar com json: true e csrfToken
+3 -  Processo finalizado ,apra comprovar se por ex fazer uma cahamada ao session nao vai retornar mais nenhuma informacao.
+ 

@@ -1,10 +1,11 @@
 import { Layout } from "@/components/Layout"
+import axios from "axios";
 import { signIn } from "next-auth/react";
 import Head from "next/head"
 import { useRouter } from "next/router";
 import { useState } from "react"
 
-const Login = () => {
+const LoginApi = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,6 +13,31 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
+
+    const login = async (email: string, password : string) => {
+        //pegar o csrf token
+        //validar as credentials
+        //retornar dados do session, verificar o session
+
+        const csrfReq = await axios.get('/api/auth/csrf');
+        if (csrfReq.data.csrfToken) {
+            const authReq = await axios.post('/api/auth/callback/credentials', {
+                json: true,
+                csrfToken: csrfReq.data.csrfToken,
+                email,
+                password
+            });
+
+            if(authReq.status === 200) {
+                const userData = await axios.get('/api/auth/session');
+                if(userData.data.user) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     const handleSubmit = async () => {
 
@@ -22,27 +48,18 @@ const Login = () => {
 
         setErrorText("");
         setLoading(true);
-
-        const request = await signIn('credentials', {
-            redirect: false,
-            email, password
-        });
-
+        
+        //processo login
+        const logged = await login(email, password);
         setLoading(false);
 
-        if (request && request.ok) {
-
-            if (router.query.callbackUrl) {
-                router.push(router.query.callbackUrl as string);
-
-            } else {
-                router.push('/')
-            }
-
-
+        if(logged) {
+            window.location.href = '/';
         } else {
-            setErrorText("Acesso negado")
+            setErrorText("Acesso negado");
         }
+
+        
 
     }
 
@@ -50,10 +67,10 @@ const Login = () => {
         <Layout>
             <div>
                 <Head>
-                    <title>Login</title>
+                    <title>Login API</title>
                 </Head>
 
-                <h1>Login</h1>
+                <h1>Login Via API</h1>
 
                 <input type="email" placeholder="Digite seu email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
                 <input type="password" placeholder="Digite sua senha" value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
@@ -69,4 +86,4 @@ const Login = () => {
 
 }
 
-export default Login;
+export default LoginApi;
